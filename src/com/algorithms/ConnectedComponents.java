@@ -1,3 +1,4 @@
+package com.algorithms;
 import java.io.IOException;
 
 public class ConnectedComponents {
