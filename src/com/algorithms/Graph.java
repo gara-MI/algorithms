@@ -7,8 +7,10 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Graph {
-	private final List<Integer> [] adjList;
-	private final int V;
+	final List<Integer> [] adjList;
+	final int V;
+	final boolean [] visited;
+	final int [] edgeTo;
 	public Graph(){
 		this(0);
 	}
@@ -16,16 +18,22 @@ public class Graph {
 		this.V = V;
 		this.adjList= new ArrayList[V+1];
 		for(int i=0;i<=V;i++){
-			getAdjList()[i] = new ArrayList<>();
+			this.adjList[i] = new ArrayList<>();
 		}
-		
+		visited = new boolean[V+1];
+		edgeTo = new int[V+1];
 	}
-	
+
 	public void addVertex(int V, int W){
 		getAdjList()[V].add(W);
 		getAdjList()[W].add(V);
 	}
-	
+
+	public void addEdge(int V, int W){
+		getAdjList()[V].add(W);
+		getAdjList()[W].add(V);
+	}
+
 	public void printGraph(){
 		for (int i = 0; i < getAdjList().length; i++) {
 			System.out.print(i+": ");
@@ -41,7 +49,7 @@ public class Graph {
 		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
 		int V = Integer.parseInt(bf.readLine());
 		Graph g = new Graph(V);
-		
+
 		int E = Integer.parseInt(bf.readLine());
 		while(E-- > 0){
 			final String[] split = bf.readLine().split(" ");
@@ -52,12 +60,12 @@ public class Graph {
 		//g.printGraph();
 		return g;
 	}
-	
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
 		int V = Integer.parseInt(bf.readLine());
 		Graph g = new Graph(V);
-		
+
 		int E = Integer.parseInt(bf.readLine());
 		while(E-- > 0){
 			final String[] split = bf.readLine().split(" ");
