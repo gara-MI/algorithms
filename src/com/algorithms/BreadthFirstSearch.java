@@ -1,32 +1,31 @@
 package com.algorithms;
 import java.io.IOException;
 import java.util.ArrayDeque;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.PriorityQueue;
+import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
 
 public class BreadthFirstSearch {
 	public final static int INFINITY = Integer.MAX_VALUE; 
-	private final boolean [] discovered;
-	private int[] edgeTo;
-	private int[] distance;
-	private int count;
-	private Graph graph;
+	final boolean [] discovered;
+	int[] edgeTo;
+	int[] distance;
+	int count;
+	Graph graph;
 	public BreadthFirstSearch(Graph g){
 		count =0;
-		discovered = new boolean [g.getV()];
+		discovered = new boolean [g.getV()+1];
 		this.graph = g;
-		edgeTo = new int[g.getV()];
-		distance = new int[g.getV()];
+		edgeTo = new int[g.getV()+1];
+		distance = new int[g.getV()+1];
 		for(int i=0;i<=g.getV();++i){
 			distance[i] = INFINITY;
 		}
 	}
 	public void bfs_queue(int start){
 		Queue<Integer> queue = new ArrayDeque();
+		distance[start] = 0;
 		queue.offer(start);
 		this.discovered[start]=true;
 		edgeTo[start] = start;
@@ -43,16 +42,109 @@ public class BreadthFirstSearch {
 					edgeTo[w] = v;
 				}
 			}
-			
+
 		}
 		System.out.println();
 		System.out.println("count: "+count);
 	}
+
+	public void bfs_queue_minimum_cost(int start){
+		Queue<Integer> queue = new ArrayDeque();
+		distance[start] = 0;
+		queue.offer(start);
+		this.discovered[start]=true;
+		edgeTo[start] = start;
+		while(!queue.isEmpty()){
+			Integer v = queue.remove();
+			System.out.print(v+" ");
+			this.count++;
+			Iterator<Integer> iterator = graph.getAdjList()[v].iterator();
+			while(iterator.hasNext()){
+				Integer w = iterator.next();
+				if(this.distance[w]==INFINITY){
+					queue.offer(w);
+					this.discovered[w]=true;
+					edgeTo[w] = v;
+					this.distance[w] = this.distance[v]+1;
+				}
+				else if(this.distance[w] > this.distance[v]+1){
+					edgeTo[w] = v;
+					this.distance[w] = this.distance[v]+1;
+				}
+			}
+		}
+		System.out.println();
+		System.out.println("count: "+count);
+	}
+
+
+	public void bfs_queue_with_ladder(int start, List<Integer> ladder, List<Integer> snakes){
+		Queue<Integer> queue = new ArrayDeque();
+		distance[start] = 0;
+		queue.offer(start);
+		this.discovered[start]=true;
+		edgeTo[start] = start;
+		while(!queue.isEmpty()){
+			Integer v = queue.remove();
+			//System.out.print(v+" ");
+			this.count++;
+			Iterator<Integer> iterator = graph.getAdjList()[v].iterator();
+			while(iterator.hasNext()){
+				Integer w = iterator.next();
+				if(this.distance[w]==INFINITY){
+					queue.offer(w);
+					this.discovered[w]=true;
+					edgeTo[w] = v;
+					if(ladder.contains(w)||snakes.contains(w)){
+						this.distance[w] = this.distance[v];
+					}
+					else{
+						this.distance[w] = this.distance[v]+1;
+					}
+				}
+				else if(this.distance[w] > this.distance[v]+1){
+					edgeTo[w] = v;
+					this.distance[w] = this.distance[v]+1;
+				}
+			}
+
+		}
+		//System.out.println();
+		System.out.println("count: "+count);
+	}
 	
+	public void bfs_queue_with_cost(int start, int[][]cost){
+		Queue<Integer> queue = new ArrayDeque();
+		distance[start] = 0;
+		queue.offer(start);
+		this.discovered[start]=true;
+		edgeTo[start] = start;
+		while(!queue.isEmpty()){
+			Integer v = queue.remove();
+			//System.out.print(v+" ");
+			this.count++;
+			Iterator<Integer> iterator = graph.getAdjList()[v].iterator();
+			while(iterator.hasNext()){
+				Integer w = iterator.next();
+				if(this.distance[w]==INFINITY){
+					queue.offer(w);
+					this.discovered[w]=true;
+					edgeTo[w] = v;
+					this.distance[w] = this.distance[v]+cost[v][w];
+				}
+				else if(this.distance[w] > this.distance[v]+cost[v][w]){
+					edgeTo[w] = v;
+					this.distance[w] = this.distance[v]+cost[v][w];
+				}
+			}
+
+		}
+	}
+
 	public boolean hasPathTo(int w){
 		return discovered[w];
 	}
-	
+
 	public Stack<Integer> pathTo(int start, int end){
 		Stack<Integer> s = new Stack<>();
 		s.push(end);
@@ -63,7 +155,7 @@ public class BreadthFirstSearch {
 		s.push(edgeTo[end]);
 		return s;
 	}
-	
+
 	public void reset(){
 		this.count = 0;
 		for(int i=0;i<this.discovered.length;++i){
@@ -91,7 +183,7 @@ public class BreadthFirstSearch {
 		}
 		//dfs.reset();
 		//dfs.dfs_rec(0);
-		System.out.println();
-		System.out.println(dfs.count);
+//		System.out.println();
+//		System.out.println(dfs.count);
 	}
 }

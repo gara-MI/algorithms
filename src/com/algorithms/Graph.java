@@ -29,9 +29,20 @@ public class Graph {
 		getAdjList()[W].add(V);
 	}
 
-	public void addEdge(int V, int W){
+	public void addBiDirectionalEdge(int V, int W){
 		getAdjList()[V].add(W);
 		getAdjList()[W].add(V);
+	}
+	public void addOneDirectionalEdge(int V, int W){
+		getAdjList()[V].add(W);
+	}
+	public void removeOneDirectionalEdge(int V, int W){
+		List<Integer> list = getAdjList()[V];//.add(W);
+		list.remove(W);
+	}
+	public void removeBiDirectionalEdge(int V, int W){
+		getAdjList()[V].remove(W);
+		getAdjList()[W].remove(V);
 	}
 
 	public void printGraph(){

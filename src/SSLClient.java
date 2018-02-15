@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -13,12 +14,24 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
 public class SSLClient {
-	private static final String SERVERIP  = "xxx";
-	private static final int SERVERPORT   = 8080;
-	private final static String KEYSTOREPASSWORD = "xxxx";
-	private final static String KEYSTOREPATH = "xxxx";
+	private static final String SERVERIP  = "194.51.35.120";
+	private static final int SERVERPORT   = 6257;
+	private final static String KEYSTOREPASSWORD = "GuillaumeMaucomblea30piges";
+	private final static String KEYSTOREPATH = "T:\\gara\\Dev\\FTV\\Varet\\Agent\\SPVLVAREPADAGT.dmz.cde.francetv.fr.cacerts";
 
-	public static void main(String[] arstring) {
+	public static void main(String[] arstring) throws IOException {
+		SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+	    SSLSocket soc = (SSLSocket) factory.createSocket();
+
+	    // Returns the names of the protocol versions which are
+	    // currently enabled for use on this connection.
+	    String[] protocols = soc.getEnabledProtocols();
+
+	    System.out.println("Enabled protocols:");
+	    for (String s : protocols) {
+	      System.out.println(s);
+	    }
+
 		try {
 			final KeyStore keyStore = KeyStore.getInstance("JKS");
 			final InputStream ksIs = new FileInputStream(KEYSTOREPATH);
